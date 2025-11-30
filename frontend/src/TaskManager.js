@@ -18,16 +18,10 @@ function TaskManager() {
         if (savedTasks) {
             try {
                 const parsedTasks = JSON.parse(savedTasks);
-                if (Array.isArray(parsedTasks) && parsedTasks.length > 0) {
-                    setTasks(parsedTasks);
-                    setCopyTasks(parsedTasks);
-                } else {
-                    fetchAllTasks();
-                }
+                setTasks(parsedTasks);
+                setCopyTasks(parsedTasks);
             } catch (err) {
                 console.error('Error loading tasks from localStorage:', err);
-                localStorage.removeItem('tasks');
-                fetchAllTasks();
             }
         } else {
             fetchAllTasks();
@@ -37,8 +31,6 @@ function TaskManager() {
     useEffect(() => {
         if (tasks.length > 0) {
             localStorage.setItem('tasks', JSON.stringify(tasks));
-        } else {
-            localStorage.removeItem('tasks');
         }
     }, [tasks]);
 
@@ -63,36 +55,23 @@ function TaskManager() {
     }, [updateTask])
 
     const handleAddTask = async () => {
-        const tempId = Date.now();
         const obj = {
             title: input,
             completed: false
         }
-        
-        const optimisticTask = { ...obj, id: tempId };
-        const updatedTasks = [...tasks, optimisticTask];
-        setTasks(updatedTasks);
-        setCopyTasks(updatedTasks);
-        
         try {
-            const { success, message, task } = await CreateTask(obj);
+            const { success, message, task } =
+                await CreateTask(obj);
             if (success) {
-                const finalTasks = tasks.map(t => t.id === tempId ? task : t);
-                const newTasks = [...finalTasks, task].filter((t, index, self) => 
-                    index === self.findIndex((task) => task.id === t.id)
-                );
-                setTasks(newTasks);
-                setCopyTasks(newTasks);
+                const updatedTasks = [...tasks, task];
+                setTasks(updatedTasks);
+                setCopyTasks(updatedTasks);
                 notify(message, 'success');
             } else {
-                setTasks(tasks.filter(t => t.id !== tempId));
-                setCopyTasks(tasks.filter(t => t.id !== tempId));
                 notify(message, 'error');
             }
         } catch (err) {
             console.error(err);
-            setTasks(tasks.filter(t => t.id !== tempId));
-            setCopyTasks(tasks.filter(t => t.id !== tempId));
             notify('Failed to create task', 'error');
         }
     }
@@ -110,25 +89,18 @@ function TaskManager() {
 
 
     const handleDeleteTask = async (id) => {
-        const deletedTask = tasks.find(task => task.id === id);
-        const updatedTasks = tasks.filter(task => task.id !== id);
-        setTasks(updatedTasks);
-        setCopyTasks(updatedTasks);
-        
         try {
             const { success, message } = await DeleteTaskById(id);
             if (success) {
+                const updatedTasks = tasks.filter(task => task.id !== id);
+                setTasks(updatedTasks);
+                setCopyTasks(updatedTasks);
                 notify(message, 'success');
             } else {
-                setTasks([...tasks]);
-                setCopyTasks([...tasks]);
                 notify(message, 'error');
             }
         } catch (err) {
             console.error(err);
-            const restoredTasks = [...updatedTasks, deletedTask].sort((a, b) => a.id - b.id);
-            setTasks(restoredTasks);
-            setCopyTasks(restoredTasks);
             notify('Failed to delete task', 'error');
         }
     }
@@ -139,64 +111,34 @@ function TaskManager() {
             title,
             completed: !completed
         }
-        
-        const updatedTasks = tasks.map(task => 
-            task.id === id ? { ...task, completed: !completed } : task
-        );
-        setTasks(updatedTasks);
-        setCopyTasks(updatedTasks);
-        
         try {
             const { success, message } = await UpdateTaskById(id, obj);
             if (success) {
-                notify(message, 'success');
+                //show success toast
+                notify(message, 'success')
             } else {
-                const revertedTasks = tasks.map(task => 
-                    task.id === id ? { ...task, completed: completed } : task
-                );
-                setTasks(revertedTasks);
-                setCopyTasks(revertedTasks);
-                notify(message, 'error');
+                //show error toast
+                notify(message, 'error')
             }
+            fetchAllTasks()
         } catch (err) {
             console.error(err);
-            const revertedTasks = tasks.map(task => 
-                task.id === id ? { ...task, completed: completed } : task
-            );
-            setTasks(revertedTasks);
-            setCopyTasks(revertedTasks);
-            notify('Failed to update task', 'error');
+            notify('Failed to update task', 'error')
         }
     }
 
     const handleUpdateItem = async (id, obj) => {
-        const oldTask = tasks.find(task => task.id === id);
-        const updatedTasks = tasks.map(task => 
-            task.id === id ? { ...task, ...obj } : task
-        );
-        setTasks(updatedTasks);
-        setCopyTasks(updatedTasks);
-        
         try {
             const { success, message } = await UpdateTaskById(id, obj);
             if (success) {
-                notify(message, 'success');
+                notify(message, 'success')
             } else {
-                const revertedTasks = tasks.map(task => 
-                    task.id === id ? oldTask : task
-                );
-                setTasks(revertedTasks);
-                setCopyTasks(revertedTasks);
-                notify(message, 'error');
+                notify(message, 'error')
             }
+            fetchAllTasks()
         } catch (err) {
             console.error(err);
-            const revertedTasks = tasks.map(task => 
-                task.id === id ? oldTask : task
-            );
-            setTasks(revertedTasks);
-            setCopyTasks(revertedTasks);
-            notify('Failed to update task', 'error');
+            notify('Failed to update task', 'error')
         }
     }
 
@@ -223,36 +165,22 @@ function TaskManager() {
     }
 
     const handleAddSuggestionAsTask = async (suggestion) => {
-        const tempId = Date.now();
         const obj = {
             title: suggestion,
             completed: false
         }
-        
-        const optimisticTask = { ...obj, id: tempId };
-        const updatedTasks = [...tasks, optimisticTask];
-        setTasks(updatedTasks);
-        setCopyTasks(updatedTasks);
-        
         try {
             const { success, message, task } = await CreateTask(obj);
             if (success) {
-                const finalTasks = tasks.map(t => t.id === tempId ? task : t);
-                const newTasks = [...finalTasks, task].filter((t, index, self) => 
-                    index === self.findIndex((task) => task.id === t.id)
-                );
-                setTasks(newTasks);
-                setCopyTasks(newTasks);
+                const updatedTasks = [...tasks, task];
+                setTasks(updatedTasks);
+                setCopyTasks(updatedTasks);
                 notify('Task added from suggestion!', 'success');
             } else {
-                setTasks(tasks.filter(t => t.id !== tempId));
-                setCopyTasks(tasks.filter(t => t.id !== tempId));
                 notify(message, 'error');
             }
         } catch (err) {
             console.error(err);
-            setTasks(tasks.filter(t => t.id !== tempId));
-            setCopyTasks(tasks.filter(t => t.id !== tempId));
             notify('Failed to add task', 'error');
         }
     }
