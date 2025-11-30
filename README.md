@@ -78,16 +78,17 @@ This is a full-stack web application built with **React** (frontend) and **Node.
 
 ---
 
-## 📸 Screenshot of App
+## 📸 Screenshots
 
 ### Light Theme
-![AI Task Manager - Light Mode](Screenshot light.png)
+![AI Task Manager - Light Mode](screenshots/Screenshot%20light.png)
 
 ### Dark Theme  
-![AI Task Manager - Dark Mode](Screenshot dark.png)
+![AI Task Manager - Dark Mode](screenshots/Screenshot%20dark.png)
 
 ### AI Suggestions Feature
-![AI Suggestions](Screenshot AI Suggestions.png)
+![AI Suggestions](screenshots/Screenshot%20AI%20Suggestions.png)
+
 ---
 
 ## ✨ Features
