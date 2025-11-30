@@ -18,10 +18,16 @@ function TaskManager() {
         if (savedTasks) {
             try {
                 const parsedTasks = JSON.parse(savedTasks);
-                setTasks(parsedTasks);
-                setCopyTasks(parsedTasks);
+                if (Array.isArray(parsedTasks) && parsedTasks.length > 0) {
+                    setTasks(parsedTasks);
+                    setCopyTasks(parsedTasks);
+                } else {
+                    fetchAllTasks();
+                }
             } catch (err) {
                 console.error('Error loading tasks from localStorage:', err);
+                localStorage.removeItem('tasks');
+                fetchAllTasks();
             }
         } else {
             fetchAllTasks();
@@ -31,6 +37,8 @@ function TaskManager() {
     useEffect(() => {
         if (tasks.length > 0) {
             localStorage.setItem('tasks', JSON.stringify(tasks));
+        } else {
+            localStorage.removeItem('tasks');
         }
     }, [tasks]);
 
