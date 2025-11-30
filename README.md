@@ -2,6 +2,12 @@
 
 A full-stack mini-application for managing tasks with AI-powered suggestions, dark/light theme toggle, and persistent storage.
 
+## 🌐 Live Demo
+
+**[View Live Demo](https://ai-task-manager-lilac.vercel.app/)**
+
+---
+
 ## 📋 Project Overview
 
 This is a full-stack web application built with **React** (frontend) and **Node.js + Express** (backend) that allows users to:
