@@ -78,18 +78,19 @@ This is a full-stack web application built with **React** (frontend) and **Node.
 
 ---
 
-## 📸 Screenshot of App
+## 📸 Screenshots
 
-### Light Theme
-![AI Task Manager - Light Mode](screenshot-light.png)
+### 🌞 Light Theme with AI Suggestions
+![AI Task Manager - Light Mode with AI Suggestions](light-mode-ai-suggestions.png)
+*Clean, modern interface with AI-powered task suggestions*
 
-### Dark Theme  
-![AI Task Manager - Dark Mode](screenshot-dark.png)
+### 🌙 Dark Theme
+![AI Task Manager - Dark Mode](dark-mode.png)
+*Eye-friendly dark mode for comfortable viewing*
 
-### AI Suggestions Feature
-![AI Suggestions](screenshot-ai-suggestions.png)
-
-*Note: Add actual screenshots to your project root directory with the names: `screenshot-light.png`, `screenshot-dark.png`, and `screenshot-ai-suggestions.png`*
+### ✨ Light Theme
+![AI Task Manager - Light Mode](light-mode.png)
+*Beautiful light theme with intuitive task management*
 
 ---
 
